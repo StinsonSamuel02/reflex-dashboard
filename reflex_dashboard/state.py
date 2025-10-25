@@ -50,7 +50,7 @@ class ServerState(rx.State):
 
 
 class TaskState(rx.State):
-    tasks: list[str] = os.listdir("tasks")
+    tasks: list[str] = os.listdir("../tasks")
     message: str = ""
     logs: str = ""
 
