@@ -56,7 +56,7 @@ def dashboard():
                 on_click=TaskState.stop_auto_update,
                 color_scheme="red",
             ),
-            rx.interval(3000, TaskState.refresh_log),
+            rx.poll(TaskState.refresh_log, every=3.0),  # type: ignore[attr-defined]
         ),
         padding="2em"
     )
