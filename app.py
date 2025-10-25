@@ -1,5 +1,6 @@
 import reflex as rx
 from state import AuthState, ServerState, TaskState
+from rxconfig import app  # Importa el objeto app definido en rxconfig.py
 
 
 def login_page():
@@ -51,5 +52,5 @@ def index():
     return rx.cond(AuthState.logged_in, dashboard(), login_page())
 
 
-app = rx.App()
+# Registrar la página en el app importado desde rxconfig
 app.add_page(index)
