@@ -48,8 +48,16 @@ def dashboard():
                 rx.button("Detener", on_click=lambda: TaskState.stop_task(script)),
             ),
         ),
-        rx.text(TaskState.message, color="green"),
-        rx.text_area(TaskState.logs, height="300px", width="100%"),
+        rx.vstack(
+            rx.text(TaskState.message, color="green"),
+            rx.text_area(TaskState.logs, height="300px", width="100%"),
+            rx.button(
+                "Detener actualización de logs",
+                on_click=TaskState.stop_auto_update,
+                color_scheme="red",
+            ),
+            rx.interval(3000, TaskState.refresh_log),
+        ),
         padding="2em"
     )
 
