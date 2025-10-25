@@ -30,13 +30,15 @@ update_dashboard() {
   }
 
   # Reiniciar el servicio de Supervisor
+  restart_service
+}
+
+restart_service() {
   echo "🔁 Reiniciando servicio Supervisor ($SUPERVISOR_PROGRAM)..."
   sudo supervisorctl restart "$SUPERVISOR_PROGRAM" || {
     echo "❌ Error al reiniciar Supervisor"
     exit 1
   }
-
-  # Esperar unos segundos para que arranque
   sleep 2
   echo "✅ Servicio reiniciado correctamente."
 }
@@ -55,11 +57,14 @@ case "$1" in
 update)
   update_dashboard
   ;;
+restart)
+  restart_service
+  ;;
 logs)
   show_logs
   ;;
 *)
-  echo "Uso: $0 {update|logs}"
+  echo "Uso: $0 {update|restart|logs}"
   exit 1
   ;;
 esac

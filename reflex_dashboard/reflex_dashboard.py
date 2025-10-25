@@ -23,6 +23,7 @@ def login_page():
 
 
 def dashboard():
+    start_log_refresh()
     return rx.vstack(
         rx.hstack(
             rx.button("Cerrar sesión", on_click=AuthState.logout),
@@ -63,11 +64,7 @@ def dashboard():
 
 
 def index() -> rx.Component:
-    if AuthState.logged_in:
-        start_log_refresh()
-        return dashboard()
-    else:
-        return login_page()
+    return rx.cond(AuthState.logged_in, dashboard(), login_page())
     # Welcome Page (Index)
     # return rx.container(
     #     rx.color_mode.button(position="top-right"),
