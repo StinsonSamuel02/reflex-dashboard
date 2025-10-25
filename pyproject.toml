@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "reflex-dashboard"
+version = "0.1.0"
+description = ""
+authors = ["SamuelStinson02 <samuelstinson02@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+reflex = "^0.8.16"
+psutil = "^7.1.1"
+apscheduler = "^3.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
