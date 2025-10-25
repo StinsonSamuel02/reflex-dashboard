@@ -1,3 +1,9 @@
 import reflex as rx
 
-app = rx.App()
+config = rx.Config(
+    app_name="reflex_dashboard",
+    plugins=[
+        rx.plugins.SitemapPlugin(),
+        rx.plugins.TailwindV4Plugin(),
+    ]
+)
