@@ -50,15 +50,17 @@ class ServerState(rx.State):
 
 
 class TaskState(rx.State):
-    tasks: list[str] = os.listdir("../tasks")
+    TASKS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "tasks"))
+    tasks: list[str] = os.listdir(TASKS_DIR) if os.path.exists(TASKS_DIR) else []
     message: str = ""
     logs: str = ""
 
     def run_task(self, script: str):
         log_file = f"logs/{script.replace('.py', '')}.log"
+        script_path = os.path.join(self.TASKS_DIR, script)
         try:
             subprocess.Popen(
-                ["python3", f"tasks/{script}"],
+                ["python3", script_path],
                 stdout=open(log_file, "a"),
                 stderr=open(log_file, "a")
             )

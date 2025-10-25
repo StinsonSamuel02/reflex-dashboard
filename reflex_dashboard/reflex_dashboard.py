@@ -3,7 +3,6 @@
 import reflex as rx
 
 from reflex_dashboard.state import AuthState, ServerState, TaskState
-from rxconfig import config
 
 
 class State(rx.State):
