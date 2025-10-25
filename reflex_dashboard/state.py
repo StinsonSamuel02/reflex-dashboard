@@ -76,18 +76,15 @@ class TaskState(rx.State):
             self._load_log(script)
         except Exception as e:
             self.message = f"Error ejecutando tarea: {e}"
-        return self
 
     def view_log(self, script: str):
         self.current_script = script
         self.auto_update = True
         self._load_log(script)
-        return self
 
     def stop_auto_update(self):
         self.auto_update = False
         self.message = "Actualización automática detenida."
-        return self
 
     def _load_log(self, script: str):
         log_file = f"logs/{script.replace('.py', '')}.log"
@@ -100,7 +97,6 @@ class TaskState(rx.State):
     def refresh_log(self):
         if self.auto_update and self.current_script:
             self._load_log(self.current_script)
-        return self
 
     def schedule_task(self, script: str, minutes: int):
         job_id = f"{script}_job"
@@ -112,7 +108,6 @@ class TaskState(rx.State):
             replace_existing=True,
         )
         self.message = f"Tarea '{script}' programada cada {minutes} minutos."
-        return self
 
     def stop_task(self, script: str):
         job_id = f"{script}_job"
@@ -121,7 +116,6 @@ class TaskState(rx.State):
             self.message = f"Tarea '{script}' detenida."
         except:
             self.message = "No hay tarea activa con ese nombre."
-        return self
 
 
 # Función para refresco automático de logs en segundo plano
