@@ -1,3 +1,5 @@
+import threading
+
 import reflex as rx
 import psutil
 import subprocess
@@ -56,11 +58,10 @@ class TaskState(rx.State):
 
     message: str = ""
     logs: str = ""
-    current_script: str = ""  # script actualmente mostrado
-    auto_update: bool = False  # controla si se debe actualizar en tiempo real
+    current_script: str = ""
+    auto_update: bool = False
 
     def run_task(self, script: str):
-        """Ejecuta una tarea y comienza a mostrar su log."""
         log_file = f"logs/{script.replace('.py', '')}.log"
         script_path = os.path.join(self.TASKS_DIR, script)
         try:
@@ -78,20 +79,17 @@ class TaskState(rx.State):
         return self
 
     def view_log(self, script: str):
-        """Muestra y activa la actualización automática del log del script dado."""
         self.current_script = script
         self.auto_update = True
         self._load_log(script)
         return self
 
     def stop_auto_update(self):
-        """Detiene la actualización automática del log."""
         self.auto_update = False
         self.message = "Actualización automática detenida."
         return self
 
     def _load_log(self, script: str):
-        """Carga el contenido del log del script."""
         log_file = f"logs/{script.replace('.py', '')}.log"
         if os.path.exists(log_file):
             with open(log_file, "r") as f:
@@ -100,13 +98,11 @@ class TaskState(rx.State):
             self.logs = "No hay logs aún."
 
     def refresh_log(self):
-        """Actualiza periódicamente el log del script actual."""
         if self.auto_update and self.current_script:
             self._load_log(self.current_script)
         return self
 
     def schedule_task(self, script: str, minutes: int):
-        """Programa la ejecución periódica de un script."""
         job_id = f"{script}_job"
         scheduler.add_job(
             lambda: self.run_task(script),
@@ -119,7 +115,6 @@ class TaskState(rx.State):
         return self
 
     def stop_task(self, script: str):
-        """Detiene una tarea programada."""
         job_id = f"{script}_job"
         try:
             scheduler.remove_job(job_id)
@@ -127,3 +122,13 @@ class TaskState(rx.State):
         except:
             self.message = "No hay tarea activa con ese nombre."
         return self
+
+
+# Función para refresco automático de logs en segundo plano
+def start_log_refresh():
+    def loop():
+        while True:
+            TaskState.refresh_log()
+            threading.Event().wait(3)  # cada 3 segundos
+
+    threading.Thread(target=loop, daemon=True).start()

@@ -2,7 +2,7 @@
 
 import reflex as rx
 
-from reflex_dashboard.state import AuthState, ServerState, TaskState
+from reflex_dashboard.state import AuthState, ServerState, TaskState, start_log_refresh
 
 
 class State(rx.State):
@@ -48,6 +48,7 @@ def dashboard():
                 rx.button("Detener", on_click=lambda: TaskState.stop_task(script)),
             ),
         ),
+        rx.divider(),
         rx.vstack(
             rx.text(TaskState.message, color="green"),
             rx.text_area(TaskState.logs, height="300px", width="100%"),
@@ -56,14 +57,17 @@ def dashboard():
                 on_click=TaskState.stop_auto_update,
                 color_scheme="red",
             ),
-            rx.poll(TaskState.refresh_log, every=3.0),  # type: ignore[attr-defined]
         ),
         padding="2em"
     )
 
 
 def index() -> rx.Component:
-    return rx.cond(AuthState.logged_in, dashboard(), login_page())
+    if AuthState.logged_in:
+        start_log_refresh()
+        return dashboard()
+    else:
+        return login_page()
     # Welcome Page (Index)
     # return rx.container(
     #     rx.color_mode.button(position="top-right"),
